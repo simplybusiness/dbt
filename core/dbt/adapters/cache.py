@@ -1,7 +1,6 @@
 from collections import namedtuple
 import threading
 from copy import deepcopy
-import pprint
 from dbt.logger import CACHE_LOGGER as logger
 import dbt.exceptions
 
@@ -303,14 +302,8 @@ class RelationsCache(object):
         """
         cached = _CachedRelation(relation)
         logger.debug('Adding relation: {!s}'.format(cached))
-        logger.debug('before adding: {}'.format(
-            pprint.pformat(self.dump_graph()))
-        )
         with self.lock:
             self._setdefault(cached)
-        logger.debug('after adding: {}'.format(
-            pprint.pformat(self.dump_graph()))
-        )
 
     def _remove_refs(self, keys):
         """Removes all references to all entries in keys. This does not
@@ -433,19 +426,11 @@ class RelationsCache(object):
         logger.debug('Renaming relation {!s} to {!s}'.format(
             old_key, new_key)
         )
-        logger.debug('before rename: {}'.format(
-            pprint.pformat(self.dump_graph()))
-        )
-
         with self.lock:
             if self._check_rename_constraints(old_key, new_key):
                 self._rename_relation(old_key, _CachedRelation(new))
             else:
                 self._setdefault(_CachedRelation(new))
-
-        logger.debug('after rename: {}'.format(
-            pprint.pformat(self.dump_graph()))
-        )
 
     def get_relations(self, database, schema):
         """Case-insensitively yield all relations matching the given schema.
