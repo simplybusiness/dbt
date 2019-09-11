@@ -35,10 +35,12 @@
 {% endmacro %}
 
 {% macro snowflake__create_view_as(relation, sql) -%}
-  create or replace view {{ relation }} as (
+  {%-  set secure = 'secure' if config.get('secure', default=false) else '' -%}
+  create or replace {{ secure }} view {{ relation }} as (
     {{ sql }}
   );
 {% endmacro %}
+
 
 {% macro snowflake__get_columns_in_relation(relation) -%}
   {% call statement('get_columns_in_relation', fetch_result=True) %}
