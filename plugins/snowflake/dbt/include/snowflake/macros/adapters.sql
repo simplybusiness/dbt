@@ -41,7 +41,6 @@
   );
 {% endmacro %}
 
-
 {% macro snowflake__get_columns_in_relation(relation) -%}
   {% call statement('get_columns_in_relation', fetch_result=True) %}
       select
